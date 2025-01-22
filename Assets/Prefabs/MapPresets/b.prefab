@@ -100,6 +100,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b849e03bf74074fb4a79082987f7ff1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isTopLeftAllowed: 1
+  isTopRightAllowed: 1
+  isBottomLeftAllowed: 0
+  isBottomRightAllowed: 0
+  isTopEdgeAllowed: 1
+  isBottomEdgeAllowed: 0
+  isLeftEdgeAllowed: 1
+  isRightEdgeAllowed: 1
   upNeighbors:
   - {fileID: -3812236508277252762, guid: a92c75aa87034459c8ecd0d5ba5651ef, type: 3}
   - {fileID: 1359082566802387863, guid: b1c2613987d90440499d7efc8591c3d8, type: 3}
@@ -117,11 +125,11 @@ MonoBehaviour:
   - {fileID: -3647232329587579339, guid: 4edd017c7a65448f0b7ebeefd2c0b0b2, type: 3}
   - {fileID: -8997492269328258106, guid: c0a55cac5764046eb887cb29a0001a4b, type: 3}
   - {fileID: -6396518882144480384, guid: fc75cc95ae95140c7a81899b75d36bf3, type: 3}
+  - {fileID: -3897512000610187655}
   downNeighbors:
   - {fileID: 6720887037801245971, guid: e00aff0a0a8434ae986e725a58cd4deb, type: 3}
   - {fileID: -2830652876205179981, guid: 8d162125d41024dea84ffd66db38f9e3, type: 3}
   - {fileID: -4621564562628935393, guid: c35348b4292df462c84f52a4935ead9b, type: 3}
-  - {fileID: -3647232329587579339, guid: 4edd017c7a65448f0b7ebeefd2c0b0b2, type: 3}
   - {fileID: -472316868233911170, guid: 1a863881b9719447bab5d69ce72cfe65, type: 3}
   - {fileID: -8997492269328258106, guid: c0a55cac5764046eb887cb29a0001a4b, type: 3}
   - {fileID: -8342481072918328580, guid: 3e600aae5c7f841aa93830f20cdee012, type: 3}
@@ -134,3 +142,4 @@ MonoBehaviour:
   - {fileID: -3647232329587579339, guid: 4edd017c7a65448f0b7ebeefd2c0b0b2, type: 3}
   - {fileID: -8997492269328258106, guid: c0a55cac5764046eb887cb29a0001a4b, type: 3}
   - {fileID: -8342481072918328580, guid: 3e600aae5c7f841aa93830f20cdee012, type: 3}
+  - {fileID: -3897512000610187655}
