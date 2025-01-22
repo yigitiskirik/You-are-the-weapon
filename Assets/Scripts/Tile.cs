@@ -2,6 +2,14 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
+    [Header("Direction Properties")]
+
+    public bool goesTop;
+    public bool goesRight;
+    public bool goesBottom;
+    public bool goesLeft;
+
+    [Header("Edge Cases")]
     public bool isTopLeftAllowed;
     public bool isTopRightAllowed;
     public bool isBottomLeftAllowed;
@@ -12,8 +20,10 @@ public class Tile : MonoBehaviour
     public bool isLeftEdgeAllowed;
     public bool isRightEdgeAllowed;
 
+    [Header("Neighbors")]
     public Tile[] upNeighbors;
     public Tile[] rightNeighbors;
     public Tile[] downNeighbors;
     public Tile[] leftNeighbors;
+
 }

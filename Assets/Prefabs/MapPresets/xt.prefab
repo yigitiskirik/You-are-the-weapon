@@ -100,6 +100,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b849e03bf74074fb4a79082987f7ff1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goesTop: 1
+  goesRight: 1
+  goesBottom: 0
+  goesLeft: 1
   isTopLeftAllowed: 0
   isTopRightAllowed: 0
   isBottomLeftAllowed: 0

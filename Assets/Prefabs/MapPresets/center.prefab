@@ -100,6 +100,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b849e03bf74074fb4a79082987f7ff1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goesTop: 1
+  goesRight: 1
+  goesBottom: 1
+  goesLeft: 1
+  isTopLeftAllowed: 0
+  isTopRightAllowed: 0
+  isBottomLeftAllowed: 0
+  isBottomRightAllowed: 0
+  isTopEdgeAllowed: 0
+  isBottomEdgeAllowed: 0
+  isLeftEdgeAllowed: 0
+  isRightEdgeAllowed: 0
   upNeighbors:
   - {fileID: 6720887037801245971}
   - {fileID: 2696760014205674638, guid: c3c7fbe953d5c459ca6333628a85324a, type: 3}

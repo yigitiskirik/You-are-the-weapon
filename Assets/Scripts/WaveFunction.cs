@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class WaveFunction : MonoBehaviour
@@ -11,6 +10,7 @@ public class WaveFunction : MonoBehaviour
     public Tile[] tileObjects;
     public List<Cell> gridComponents;
     public Cell cellObj;
+    public Canvas UICanvas;
 
     int iterations = 0;
 
@@ -37,6 +37,7 @@ public class WaveFunction : MonoBehaviour
             for (int x = 0; x < dimensions; x++)
             {
                 Cell newCell = Instantiate(cellObj, new Vector2(x, y), Quaternion.identity);
+                newCell.transform.parent = UICanvas.transform;
                 List<Tile> validTiles = new(tileObjects);
 
                 if (IsTopLeft(x, y))
@@ -119,7 +120,8 @@ public class WaveFunction : MonoBehaviour
         cellToCollapse.tileOptions = new Tile[] { selectedTile };
 
         Tile foundTile = cellToCollapse.tileOptions[0];
-        Instantiate(foundTile, cellToCollapse.transform.position, Quaternion.identity);
+        var newTile = Instantiate(foundTile, cellToCollapse.transform.position, Quaternion.identity);
+        newTile.transform.parent = cellToCollapse.transform;
 
         UpdateGeneration();
     }
@@ -257,6 +259,107 @@ public class WaveFunction : MonoBehaviour
         {
             StartCoroutine(CheckEntropy());
         }
+        else
+        {
+            Dictionary<Cell, List<Cell>> roomGraph = new();
+            for (int y = 0; y < dimensions; y++)
+            {
+                for (int x = 0; x < dimensions; x++)
+                {
+                    int index = x + y * dimensions;
+                    Cell currentCell = gridComponents[index];
+                    if (!roomGraph.ContainsKey(currentCell))
+                        roomGraph[currentCell] = new List<Cell>();
+
+                    Tile tile = currentCell.tileOptions[0]; // Assume cell is collapsed with one tile.
+
+                    // Check each neighbor
+                    if (y < dimensions - 1 && tile.goesTop && gridComponents[index + dimensions].tileOptions[0].goesBottom)
+                        roomGraph[currentCell].Add(gridComponents[index + dimensions]);
+
+                    if (y > 0 && tile.goesBottom && gridComponents[index - dimensions].tileOptions[0].goesTop)
+                        roomGraph[currentCell].Add(gridComponents[index - dimensions]);
+
+                    if (x < dimensions - 1 && tile.goesRight && gridComponents[index + 1].tileOptions[0].goesLeft)
+                        roomGraph[currentCell].Add(gridComponents[index + 1]);
+
+                    if (x > 0 && tile.goesLeft && gridComponents[index - 1].tileOptions[0].goesRight)
+                        roomGraph[currentCell].Add(gridComponents[index - 1]);
+                }
+            }
+
+            List<Cell> longestPath = FindLongestPath(roomGraph);
+            // Step 3: Mark all cells connected to the longest path
+            HashSet<Cell> connectedCells = new(longestPath); // Start with the longest path cells
+
+            // Traverse the graph to find all connected cells
+            Queue<Cell> toVisit = new Queue<Cell>(longestPath);
+            HashSet<Cell> visited = new HashSet<Cell>(longestPath); // Already visited cells
+
+            while (toVisit.Count > 0)
+            {
+                Cell current = toVisit.Dequeue();
+                foreach (var neighbor in roomGraph[current])
+                {
+                    if (!visited.Contains(neighbor))
+                    {
+                        visited.Add(neighbor);
+                        connectedCells.Add(neighbor);
+                        toVisit.Enqueue(neighbor);
+                    }
+                }
+            }
+
+            // Step 4: Remove tiles not on the connected path and destroy their game objects
+            foreach (Cell cell in gridComponents)
+            {
+                if (!connectedCells.Contains(cell))
+                {
+                    // Cells not in the connected path should be removed, both tile and game object
+                    cell.RecreateCell(new Tile[0]); // Empty tile options
+                    cell.collapsed = true; // Mark the cell as collapsed
+
+                    // Destroy the associated GameObject
+                    Destroy(cell.gameObject); // Destroy the GameObject (if you want to remove it)
+                }
+            }
+        }
+    }
+
+    List<Cell> FindLongestPath(Dictionary<Cell, List<Cell>> graph)
+    {
+        HashSet<Cell> visited = new();
+        List<Cell> longestPath = new();
+
+        void DFS(Cell current, List<Cell> currentPath)
+        {
+            visited.Add(current);
+            currentPath.Add(current);
+
+            bool isDeadEnd = true;
+            foreach (var neighbor in graph[current])
+            {
+                if (!visited.Contains(neighbor))
+                {
+                    isDeadEnd = false;
+                    DFS(neighbor, new List<Cell>(currentPath));
+                }
+            }
+
+            if (isDeadEnd && currentPath.Count > longestPath.Count)
+            {
+                longestPath = new List<Cell>(currentPath);
+            }
+
+            visited.Remove(current);
+        }
+
+        foreach (var startCell in graph.Keys)
+        {
+            DFS(startCell, new List<Cell>());
+        }
+
+        return longestPath;
     }
 
     void CheckValidity(List<Tile> optionList, List<Tile> validOption)
