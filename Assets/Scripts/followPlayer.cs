@@ -17,16 +17,16 @@ public class followPlayer : MonoBehaviour
     {
         Vector3 directionToPlayer = transform.position - player.position;
         float currentDistance = directionToPlayer.magnitude;
-        if (currentDistance < cameraRadius)
-        {
-            Vector3 desiredPosition = player.position + offset;
-            transform.position = Vector3.Lerp(transform.position, desiredPosition, followSpeed * Time.deltaTime);
-        }
-        else
+        if (currentDistance > cameraRadius)
         {
             directionToPlayer.Normalize();
             Vector3 boundaryPosition = player.position + directionToPlayer * cameraRadius;
             transform.position = boundaryPosition;
+        }
+        else
+        {
+            Vector3 desiredPosition = player.position + offset;
+            transform.position = Vector3.Lerp(transform.position, desiredPosition, followSpeed * Time.deltaTime);
         }
     }
 }
