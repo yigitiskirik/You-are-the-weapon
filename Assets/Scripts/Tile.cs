@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
+    [Header("Map Properties")]
+    public Sprite mapSprite;
+
     [Header("Direction Properties")]
 
     public bool goesTop;

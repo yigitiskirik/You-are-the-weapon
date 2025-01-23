@@ -10,7 +10,7 @@ public class WaveFunction : MonoBehaviour
     public Tile[] tileObjects;
     public List<Cell> gridComponents;
     public Cell cellObj;
-    public Canvas UICanvas;
+    public GameObject parentObjectToHide;
     public GameManager gameManager;
 
     int iterations = 0;
@@ -38,7 +38,7 @@ public class WaveFunction : MonoBehaviour
             for (int x = 0; x < dimensions; x++)
             {
                 Cell newCell = Instantiate(cellObj, new Vector2(x, y), Quaternion.identity);
-                newCell.transform.parent = UICanvas.transform;
+                newCell.transform.parent = parentObjectToHide.transform;
                 List<Tile> validTiles = new(tileObjects);
 
                 if (IsTopLeft(x, y))
@@ -330,6 +330,7 @@ public class WaveFunction : MonoBehaviour
                 }
             }
 
+            parentObjectToHide.SetActive(false);
             gameManager.mapGrid = gridComponents;
             gameManager.mapSize = dimensions;
             gameManager.startPoint = new Vector2Int(startIndex % dimensions, Mathf.FloorToInt(startIndex / dimensions));

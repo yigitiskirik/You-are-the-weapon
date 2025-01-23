@@ -100,6 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b849e03bf74074fb4a79082987f7ff1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapSprite: {fileID: -123530462, guid: 9c2e923cad3e1434ca792230428d4f5f, type: 3}
   goesTop: 0
   goesRight: 0
   goesBottom: 0

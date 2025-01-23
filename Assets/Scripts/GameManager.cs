@@ -17,7 +17,9 @@ public class GameManager : MonoBehaviour
     public GameObject westDoorPrefab;
     public GameObject playerObject;
 
-    public Vector2Int playerPosition; // Remove public
+    public MinimapManager minimapManager;
+
+    public Vector2Int playerPosition;
 
     enum Orientation {
         Top,
@@ -35,12 +37,20 @@ public class GameManager : MonoBehaviour
         Debug.Log("isMapReady is true! Continuing...");
 
         playerPosition = startPoint;
+        minimapManager.gridSize = new Vector2Int(mapSize, mapSize);
+        minimapManager.InitializeMinimap();
         GoToCoordinates(playerPosition);
     }
 
     void GoToCoordinates(Vector2Int coordinates)
     {
         Tile selectedTile = ReturnCellDetails(coordinates);
+        minimapManager.UpdatePlayerIndicator(coordinates);
+        int index = coordinates.y * mapSize + coordinates.x;
+        if (!mapGrid[index].visited) {
+            mapGrid[index].VisitCell();
+            minimapManager.AddMapSprite(coordinates, selectedTile.mapSprite);
+        }
         ToggleDoors(selectedTile);
     }
 
@@ -75,10 +85,10 @@ public class GameManager : MonoBehaviour
                 playerObject.transform.position = new Vector2(7.8f, 0);
                 break;
             case Orientation.Top:
-                playerObject.transform.position = new Vector2(4.9f, 0);
+                playerObject.transform.position = new Vector2(0, 4.9f);
                 break;
             case Orientation.Bottom:
-                playerObject.transform.position = new Vector2(-5f, 0);
+                playerObject.transform.position = new Vector2(0, -5f);
                 break;
         }
     }
