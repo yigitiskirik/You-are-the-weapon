@@ -1042,11 +1042,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   theRB: {fileID: 1347125195}
-  moveSpeed: 0
+  moveSpeed: 2
   rangeToChasePlayer: 10
   distanceToPlayer: 5
   health: 150
-  shouldShoot: 0
+  shouldShoot: 1
   bullet: {fileID: 1705791093983206377, guid: 1c4968171358b3f4eb25f95f5a383422, type: 3}
   firePoint: {fileID: 1539757655}
   fireRate: 1
