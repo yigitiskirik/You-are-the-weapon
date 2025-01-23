@@ -18,6 +18,9 @@ public class EnemyBullet : MonoBehaviour
 
     public int bounceLife;
 
+    public float homingDistance;
+    public bool shouldHome = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +31,16 @@ public class EnemyBullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (type == BulletType.homing && Vector2.Distance(transform.position, playerMovement.instance.transform.position) > homingDistance && shouldHome)
+        {
+            direction = playerMovement.instance.transform.position - transform.position;
+            direction.Normalize();
+        }
+        if (Vector2.Distance(transform.position, playerMovement.instance.transform.position) <= homingDistance)
+        {
+            shouldHome = false;
+        }
 
         transform.position += direction * speed * Time.deltaTime;
 
@@ -59,6 +72,10 @@ public class EnemyBullet : MonoBehaviour
 
                 if (bounceLife == 0) Destroy(gameObject);
             }
+        }
+        else if (type == BulletType.homing)
+        {
+            Destroy(gameObject);
         }
     }
 }

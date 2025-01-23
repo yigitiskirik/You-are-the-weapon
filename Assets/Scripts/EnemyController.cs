@@ -54,7 +54,6 @@ public class EnemyController : MonoBehaviour
                     moveDirection = Vector3.zero;
                 }
 
-                this.theBody.flipX = playerMovement.instance.transform.position.x < this.transform.position.x;
 
                 moveDirection.Normalize();
 

@@ -6,8 +6,14 @@ public class followPlayer : MonoBehaviour
     public float followSpeed = 5f;     
     public float cameraRadius = 10f;   
 
-    private Vector3 offset;            
+    private Vector3 offset;
 
+    public static followPlayer instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
     void Start()
     {
         offset = transform.position - player.position;
