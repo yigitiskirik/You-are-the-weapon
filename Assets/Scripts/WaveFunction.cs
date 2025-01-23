@@ -11,6 +11,7 @@ public class WaveFunction : MonoBehaviour
     public List<Cell> gridComponents;
     public Cell cellObj;
     public Canvas UICanvas;
+    public GameManager gameManager;
 
     int iterations = 0;
 
@@ -289,12 +290,17 @@ public class WaveFunction : MonoBehaviour
             }
 
             List<Cell> longestPath = FindLongestPath(roomGraph);
+            Cell startCell = longestPath[0];  // First cell in the longest path
+            Cell endCell = longestPath[^1];
+            int startIndex = Array.FindIndex(gridComponents.ToArray(), cell => cell == startCell);
+            int endIndex = Array.FindIndex(gridComponents.ToArray(), cell => cell == endCell);
+
             // Step 3: Mark all cells connected to the longest path
             HashSet<Cell> connectedCells = new(longestPath); // Start with the longest path cells
 
             // Traverse the graph to find all connected cells
-            Queue<Cell> toVisit = new Queue<Cell>(longestPath);
-            HashSet<Cell> visited = new HashSet<Cell>(longestPath); // Already visited cells
+            Queue<Cell> toVisit = new(longestPath);
+            HashSet<Cell> visited = new(longestPath); // Already visited cells
 
             while (toVisit.Count > 0)
             {
@@ -323,6 +329,12 @@ public class WaveFunction : MonoBehaviour
                     Destroy(cell.gameObject); // Destroy the GameObject (if you want to remove it)
                 }
             }
+
+            gameManager.mapGrid = gridComponents;
+            gameManager.mapSize = dimensions;
+            gameManager.startPoint = new Vector2Int(startIndex % dimensions, Mathf.FloorToInt(startIndex / dimensions));
+            gameManager.endPoint = new Vector2Int(endIndex % dimensions, Mathf.FloorToInt(endIndex / dimensions));
+            gameManager.isMapReady = true;
         }
     }
 
