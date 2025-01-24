@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,12 +19,25 @@ public class EnemyController : MonoBehaviour
     //public GameObject EnemyHitEffect;
 
     public bool shouldShoot;
-    public GameObject bullet;
+    //public GameObject testBullet;
+    public EnemyBullet bullet;
     public Transform firePoint;
     public float fireRate;
     private float fireCounter;
 
     public float shootRange;
+
+    public enum ShootPatternType
+    {
+        ToPlayer,
+        Plus,
+        Shotgun,
+        OmniDirectional,
+        XMark,
+    }
+
+    public EnemyBullet.BulletType bulletType;
+    public ShootPatternType shootingPattern;
 
     public SpriteRenderer theBody;
 
@@ -68,7 +82,67 @@ public class EnemyController : MonoBehaviour
                     if (fireCounter <= 0)
                     {
                         fireCounter = fireRate;
-                        Instantiate(bullet, firePoint.transform.position, transform.rotation);
+                        bullet.type = bulletType;
+                        switch (bulletType)
+                        {
+                            case EnemyBullet.BulletType.bouncy:
+                                bullet.speed = 5;
+                                bullet.bounceLife = 4;
+                                bullet.homingDistance = 0;
+                                break;
+                            case EnemyBullet.BulletType.normal:
+                                bullet.speed = 10;
+                                bullet.bounceLife = 0;
+                                bullet.homingDistance = 0;
+                                break;
+                            case EnemyBullet.BulletType.homing:
+                                bullet.speed = 5;
+                                bullet.bounceLife = 0;
+                                bullet.homingDistance = 2;
+                                break;
+                        }
+                        switch (shootingPattern)
+                        {
+                            case ShootPatternType.ToPlayer:
+                                bullet.directional = false;
+                                bullet.shootAngle = 0;
+                                Instantiate(bullet, firePoint.transform.position, transform.rotation);
+                                break;
+                            case ShootPatternType.Plus:
+                                bullet.directional = true;
+                                for (int i = 0; i < 4; i++)
+                                {
+                                    bullet.shootAngle = i * 90;
+                                    Instantiate(bullet, firePoint.transform.position, transform.rotation);
+                                }
+                                break;
+                            case ShootPatternType.XMark:
+                                bullet.directional = true;
+                                for (int i = 0; i < 4; i++)
+                                {
+                                    bullet.shootAngle = i * 90 + 45;
+                                    Instantiate(bullet, firePoint.transform.position, transform.rotation);
+                                }
+                                break;
+                            case ShootPatternType.OmniDirectional:
+                                bullet.directional = true;
+                                for (int i = 0; i < 8; i++)
+                                {
+                                    bullet.shootAngle = i * 45;
+                                    Instantiate(bullet, firePoint.transform.position, transform.rotation);
+                                }
+                                break;
+                            case ShootPatternType.Shotgun:
+                                bullet.directional = false;
+                                bullet.shootAngle = -15;
+                                Instantiate(bullet, firePoint.transform.position, transform.rotation);
+                                bullet.shootAngle = 0;
+                                Instantiate(bullet, firePoint.transform.position, transform.rotation);
+                                bullet.shootAngle = 15;
+                                Instantiate(bullet, firePoint.transform.position, transform.rotation);
+                                break;
+                        }
+                        //Instantiate(testBullet, firePoint.transform.position, transform.rotation);
                     }
                 }
 

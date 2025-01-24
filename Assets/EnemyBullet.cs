@@ -14,18 +14,33 @@ public class EnemyBullet : MonoBehaviour
         homing
     }
 
+    public bool directional;
+    public float shootAngle;
+
     public BulletType type;
 
     public int bounceLife;
 
     public float homingDistance;
+
+    [HideInInspector] 
     public bool shouldHome = true;
+
+    private float lifeTime = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        direction = playerMovement.instance.transform.position - transform.position;
-        direction.Normalize();
+        if (directional)
+        {
+            direction = new Vector2(Mathf.Cos(Mathf.Deg2Rad * shootAngle), Mathf.Sin(Mathf.Deg2Rad * shootAngle));
+        }
+        else
+        {
+            direction = playerMovement.instance.transform.position - transform.position;
+            direction.Normalize();
+            direction = Quaternion.AngleAxis(shootAngle, Vector3.forward) * direction;
+        }
     }
 
     // Update is called once per frame
@@ -44,6 +59,8 @@ public class EnemyBullet : MonoBehaviour
 
         transform.position += direction * speed * Time.deltaTime;
 
+        if (lifeTime < 0.3f) lifeTime += Time.deltaTime;
+
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -55,6 +72,7 @@ public class EnemyBullet : MonoBehaviour
         }
         else if (other.gameObject.CompareTag("Bullet"))
         {
+            if (lifeTime < 0.3f) return;
             Destroy(gameObject);
         }
         else if (type == BulletType.normal)
